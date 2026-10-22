@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Haldane — Editing</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <style>
+      body { margin: 0; }
+      .demo-note { font: 14px/1.5 "Inter Tight", system-ui, sans-serif; background: #f6f3ee; color: #121212; border-bottom: 1px solid #d9d3ca; padding: 10px 16px; }
+      .demo-note strong { font-weight: 600; }
+    </style>
+  </head>
+  <body>
+    <div class="demo-note" id="demo-note">
+      <strong>Presentation mode.</strong> This editor runs on a test backend: you can open products and pages, change text, swap photos and preview, but changes are kept only in this browser tab. On the live site the same screens save to the website and publish in about a minute.
+    </div>
+    <script>
+      // crypto.randomUUID exists only in secure contexts; a plain http preview host still needs it for Decap.
+      if (window.crypto && !crypto.randomUUID) {
+        crypto.randomUUID = () => ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
+      }
+    </script>
+    <script src="./seed.js"></script>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  </body>
+</html>

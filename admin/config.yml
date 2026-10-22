@@ -1,0 +1,142 @@
+# Decap CMS configuration — Haldane sample site
+# PRESENTATION: test-repo backend (edits live only in the browser tab, nothing is saved).
+backend:
+  name: test-repo
+
+# GO-LIVE (after award): replace the block above with the GitHub backend; needs a small OAuth proxy
+# (Netlify, Cloudflare Worker or decap-proxy) that I set up with the client's GitHub login.
+# backend:
+#   name: github
+#   repo: <owner>/<repo>
+#   branch: main
+#   base_url: https://<oauth-proxy-host>
+#   commit_messages:
+#     create: "Add {{collection}} “{{slug}}”"
+#     update: "Update {{collection}} “{{slug}}”"
+#     delete: "Delete {{collection}} “{{slug}}”"
+
+# local_backend: true   # for editing on your own computer with `npx decap-server`
+
+site_url: /
+display_url: /
+logo_url: ../favicon.svg
+locale: en
+media_folder: "src/assets/uploads"
+public_folder: "../../assets/uploads"
+slug:
+  encoding: "ascii"
+  clean_accents: true
+
+collections:
+  - name: products
+    label: Products
+    label_singular: Product
+    folder: src/content/products
+    create: true
+    delete: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    sortable_fields: [order, title, line]
+    view_groups:
+      - label: Line
+        field: line
+    summary: "{{title}} · {{line}} · {{price}}"
+    fields:
+      - { label: Title, name: title, widget: string, hint: "Shown under the photo and in the lightbox." }
+      - label: Line
+        name: line
+        widget: select
+        options:
+          - { label: Rings, value: rings }
+          - { label: Bespoke watches, value: watches }
+          - { label: Leather straps, value: straps }
+      - { label: Price text, name: price, widget: string, hint: "Free text, e.g. From 1,900 €" }
+      - { label: Buy now link, name: buy_url, widget: string, pattern: ["^https://", "Must start with https://"], hint: "Your external checkout page for this piece." }
+      - { label: Photo, name: photo, widget: image, media_folder: "/src/assets/products", public_folder: "../../assets/products", hint: "JPG, 1200 px or wider. The site makes the small WebP sizes itself." }
+      - { label: Pencil drawing, name: drawing, widget: image, required: false, media_folder: "/src/assets/drawings", public_folder: "../../assets/drawings", hint: "Optional. Shown on hover and in the chapter opener." }
+      - { label: Photo alt text, name: alt, widget: string, hint: "One sentence describing the photo, for search engines and screen readers." }
+      - { label: Drawing alt text, name: drawing_alt, widget: string, required: false }
+      - { label: Materials, name: materials, widget: string }
+      - { label: Lead time, name: lead_time, widget: string }
+      - { label: Order, name: order, widget: number, value_type: int, hint: "Lower numbers come first; the first piece of each line is the chapter opener." }
+      - { label: Published, name: published, widget: boolean, default: true }
+
+  - name: pages
+    label: Page text
+    files:
+      - name: home
+        label: Home
+        file: src/content/pages/home.md
+        fields:
+          - { label: Browser title, name: title, widget: string }
+          - { label: Search description, name: description, widget: text }
+          - { label: Eyebrow, name: eyebrow, widget: string }
+          - { label: Headline, name: headline, widget: string, hint: "Use | for a line break and *asterisks* for italic." }
+          - { label: Sub line, name: sub, widget: string }
+          - { label: Button text, name: cta, widget: string }
+          - { label: Value statement (three lines), name: values, widget: list, field: { label: Line, name: line, widget: string } }
+          - { label: Reveal eyebrow, name: reveal_eyebrow, widget: string }
+          - { label: Reveal line, name: reveal_line, widget: string }
+          - { label: Body, name: body, widget: hidden, default: "" }
+      - name: about
+        label: About
+        file: src/content/pages/about.md
+        fields:
+          - { label: Browser title, name: title, widget: string }
+          - { label: Search description, name: description, widget: text }
+          - { label: Eyebrow, name: eyebrow, widget: string }
+          - { label: Opening line, name: quote, widget: string }
+          - label: Studio stills (four)
+            name: stills
+            widget: list
+            fields:
+              - { label: Image, name: image, widget: image, media_folder: "/src/assets/stills", public_folder: "../../assets/stills" }
+              - { label: Alt text, name: alt, widget: string }
+              - { label: Caption, name: caption, widget: string }
+          - label: Craftsmanship reel (six)
+            name: reel
+            widget: list
+            fields:
+              - { label: Image, name: image, widget: image, media_folder: "/src/assets/stills", public_folder: "../../assets/stills" }
+              - { label: Alt text, name: alt, widget: string }
+              - { label: Caption, name: caption, widget: string }
+          - { label: Story, name: body, widget: markdown }
+      - name: contact
+        label: Contact
+        file: src/content/pages/contact.md
+        fields:
+          - { label: Browser title, name: title, widget: string }
+          - { label: Search description, name: description, widget: text }
+          - { label: Eyebrow, name: eyebrow, widget: string }
+          - { label: Headline, name: headline, widget: string }
+          - { label: Sub line, name: sub, widget: string }
+          - { label: Note under the form, name: form_note, widget: text }
+          - { label: Body, name: body, widget: hidden, default: "" }
+
+  - name: settings
+    label: Site settings
+    files:
+      - name: settings
+        label: Brand, email, social, lines
+        file: src/content/settings.json
+        fields:
+          - { label: Brand name, name: brand, widget: string }
+          - { label: Tagline, name: tagline, widget: string }
+          - { label: Contact email, name: email, widget: string }
+          - label: Social links
+            name: social
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: URL, name: url, widget: string }
+          - { label: Footer note, name: footer_note, widget: text }
+          - label: Product lines
+            name: lines
+            widget: list
+            fields:
+              - { label: Id, name: id, widget: string, hint: "rings, watches or straps — do not change." }
+              - { label: Numeral, name: numeral, widget: string }
+              - { label: Name, name: name, widget: string }
+              - { label: Opener line, name: opener, widget: string }
+              - { label: Facts (three), name: facts, widget: list, field: { label: Fact, name: fact, widget: string } }

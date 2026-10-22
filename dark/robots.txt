@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /haldane/dark/admin/
+Sitemap: https://congptvinadic-debug.github.io/haldane/dark/sitemap.xml
